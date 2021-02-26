@@ -1,0 +1,13 @@
+Tool	setting	path	file	additional.files
+Simulation	single	../../../../01.simulation/02.single/mouse/single.lz5000000/	countTable.csv	
+salmonTE	single	../../../../02.tool_application/salmonTE/mouse/single/mm_single_result/	EXPR.csv	
+SQuIRE	single	../../../../02.tool_application/squire/mouse/single_new/squire_count/	_TEcounts.txt	../../../../02.tool_application/squire/mouse/preprocessing/squireMyAnnoDict.csv
+Telescope	single	../../../../02.tool_application/telescope/mouse/single/results/	telescope-telescope_report.tsv	
+TEtranscripts	single	../../../../02.tool_application/tetranscripts/mouse/single_all/	mm_single.cntTable	
+TEtools	single	../../../../02.tool_application/tetools/mouse/single/	mm_simulated_tetools.csv	../../../../02.tool_application/tetools/mouse/single/orderOfFastqs.txt
+Simulation	paired	../../../../01.simulation/03.paired/mouse/paired.lz5000000/	countTable.csv	
+salmonTE	paired	../../../../02.tool_application/salmonTE/mouse/paired/mm_paired_result/	EXPR.csv	
+SQuIRE	paired	../../../../02.tool_application/squire/mouse/paired_new/squire_count/	_TEcounts.txt	../../../../02.tool_application/squire/mouse/preprocessing/squireMyAnnoDict.csv
+Telescope	paired	../../../../02.tool_application/telescope/mouse/paired/results/	telescope-telescope_report.tsv	
+TEtranscripts	paired	../../../../02.tool_application/tetranscripts/mouse/paired_all/	mm_paired.cntTable	
+TEtools	paired	../../../../02.tool_application/tetools/mouse/paired/	mm_simulated_tetools.csv	../../../../02.tool_application/tetools/mouse/paired/orderOfFastqs.txt

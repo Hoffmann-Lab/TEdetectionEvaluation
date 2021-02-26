@@ -1,0 +1,14 @@
+Documentation.Rmd
+single
+*.html
+*.png
+dev
+benchmark/
+Rdata
+figures/
+figures.Rmd
+tables/
+panel*
+generateTables.R
+supplement*
+te_benchmark
