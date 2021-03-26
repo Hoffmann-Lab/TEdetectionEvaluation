@@ -222,6 +222,8 @@ for(setting in range(1,length(data))){
 
 
 
-
+sink("sessionInfo.log")
+sessionInfo()
+sink()
 
 

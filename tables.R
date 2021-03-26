@@ -266,3 +266,8 @@ df.count.condition %>%
 df.count.condition %>% 
   filter(condition == 'FN', Setting == 'single') %>% 
   summarise(median(n))
+
+
+sink("sessionInfo.log")
+sessionInfo()
+sink()
