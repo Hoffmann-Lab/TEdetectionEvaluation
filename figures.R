@@ -834,4 +834,6 @@ dev.off()
 write.csv(simdf.young, 
           file = paste0(project, '/Figures/tmp/figure_S1.csv'))
 
-  
+sink("sessionInfo.log")
+sessionInfo()
+sink() 
