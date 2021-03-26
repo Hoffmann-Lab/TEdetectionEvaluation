@@ -1,9 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 80
----
-
 # TEdetectionEvaluation
 
 Tool comparison for detecting differentially expressed individual transposable
