@@ -1,7 +1,7 @@
 
 #=============================== Settings =====================================
 
-project.name = 'te_benchmark'
+project.name = 'polyester_notho'
 read.threshold = 5
 file.extension = ".cnttbl.processed.Rdata"
 squire.translation = TRUE
