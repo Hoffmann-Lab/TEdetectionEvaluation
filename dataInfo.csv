@@ -1,13 +1,13 @@
 Tool	setting	path	file	additional.files
-Simulation	single	../../packages/03.tool_evaluation/polyester_simulation/single_50bp/notho/	countTable.csv	
-salmonTE	single	../../packages/03.tool_evaluation/polyester_simulation/single_50bp/notho/	salmonTE_notho_single50bp.csv	
-SQuIRE	single	../../packages/03.tool_evaluation/polyester_simulation/single_50bp/notho/squire_notho_single50bp	_TEcounts.txt	../../packages/03.tool_evaluation/polyester_simulation/single_50bp/notho/squireMyAnnoDict.csv
-Telescope	single	../../packages/03.tool_evaluation/polyester_simulation/single_50bp/notho/telescope_notho_single50bp/	telescope-telescope_report.tsv	
-TEtranscripts	single	../../packages/03.tool_evaluation/polyester_simulation/single_50bp/notho/	tetranscripts_notho_single50bp.csv	
-TEtools	single	../../packages/03.tool_evaluation/polyester_simulation/single_50bp/notho/	tetools_notho_single50bp.csv	../../packages/03.tool_evaluation/polyester_simulation/single_50bp/notho/orderOfFastqs.txt
+Simulation	single	../../packages/03.tool_evaluation/polyester_simulation/single_100bp/notho/	countTable.csv	
+salmonTE	single	../../packages/03.tool_evaluation/polyester_simulation/single_100bp/notho/	salmonTE_notho_single100bp.csv	
+SQuIRE	single	../../packages/03.tool_evaluation/polyester_simulation/single_100bp/notho/squire_notho_single100bp	_TEcounts.txt	../../packages/03.tool_evaluation/polyester_simulation/single_100bp/notho/squireMyAnnoDict.csv
+Telescope	single	../../packages/03.tool_evaluation/polyester_simulation/single_100bp/notho/telescope_notho_single100bp/	telescope-telescope_report.tsv	
+TEtranscripts	single	../../packages/03.tool_evaluation/polyester_simulation/single_100bp/notho/	tetranscripts_notho_single100bp.csv	
+TEtools	single	../../packages/03.tool_evaluation/polyester_simulation/single_100bp/notho/	tetools_notho_single100bp.csv	../../packages/03.tool_evaluation/polyester_simulation/single_100bp/notho/orderOfFastqs.txt
 Simulation	paired	../../packages/03.tool_evaluation/polyester_simulation/paired_100bp/notho/	countTable.csv	
 salmonTE	paired	../../packages/03.tool_evaluation/polyester_simulation/paired_100bp/notho/	salmonTE_notho_paired100bp.csv	
-SQuIRE	paired	../../packages/03.tool_evaluation/polyester_simulation/paired_100bp/notho/squire_notho_paired100bp	_TEcounts.txt	../../packages/03.tool_evaluation/polyester_simulation/paired_100bp/notho/squireMyAnnoDict.csv
+SQuIRE	paired	../../packages/03.tool_evaluation/polyester_simulation/paired_100bp/notho/squire_notho_paired100bp/	_TEcounts.txt	../../packages/03.tool_evaluation/polyester_simulation/paired_100bp/notho/squireMyAnnoDict.csv
 Telescope	paired	../../packages/03.tool_evaluation/polyester_simulation/paired_100bp/notho/telescope_notho_paired100bp/	telescope-telescope_report.tsv	
 TEtranscripts	paired	../../packages/03.tool_evaluation/polyester_simulation/paired_100bp/notho/	tetranscripts_notho_paired100bp.csv	
 TEtools	paired	../../packages/03.tool_evaluation/polyester_simulation/paired_100bp/notho/	tetools_notho_paired100bp.csv	../../packages/03.tool_evaluation/polyester_simulation/paired_100bp/notho/orderOfFastqs.txt

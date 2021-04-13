@@ -13,3 +13,5 @@ generateTables.R
 supplement*
 te_benchmark
 polyester_notho/
+polyester_notho_100bp/
+sessionInfo.log

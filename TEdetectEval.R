@@ -48,7 +48,7 @@ if(project.name == 'dev'){
 #============================ Expression detection ============================
 
 
-for(setting in range(1,length(data))){
+for(setting in 1:length(data)){
   
   data.df <- data[[setting]]
   
@@ -111,7 +111,7 @@ for(setting in range(1,length(data))){
 
 deseq.res.all <- data.frame()
 
-for(setting in range(1,length(data))){
+for(setting in 1:length(data)){
   
   data.df <- data[[setting]]
   
@@ -119,7 +119,11 @@ for(setting in range(1,length(data))){
                          levels(as.factor(data.df$setting)),
                          ".combined.deseq2.res.Rdata"))) {
 
-   print('Run DESeq2...')
+  print('Run DESeq2...')
+    
+  tools <- data.df %>% 
+      rownames_to_column(var = 'Tool') %>% 
+      pull(Tool)
 
    deseq.results.combined  <- do.call("rbind",
                                      mclapply(tools,
@@ -164,7 +168,7 @@ print('Prepare data frame for recall vs fdr plot')
 # table were considered as truly differentially expressed for the following
 # analysis.
 
-for(setting in range(1,length(data))){
+for(setting in 1:length(data)){
   
   data.df <- data[[setting]]
   set <- levels(as.factor(data.df$setting))
@@ -184,7 +188,7 @@ for(setting in range(1,length(data))){
 
 deseq.res.all <- data.frame()
 
-for(setting in range(1,length(data))){
+for(setting in 1:length(data)){
   
   data.df <- data[[setting]]
   set <- levels(as.factor(data.df$setting))
@@ -208,7 +212,8 @@ for(setting in range(1,length(data))){
   rm(deseq.results.combined)
 
   deseq.results.updated <- deseq.results.updated %>%
-    mutate(padj = case_when(is.na(padj) ~ 1,TRUE ~ padj)) %>%
+    mutate(padj = as.numeric(padj),
+           padj = case_when(is.na(padj) ~ 1,TRUE ~ padj)) %>%
     filter(Tool != 'Simulation')
 
   save(deseq.results.updated, file = paste0(result.dirs[['data']],

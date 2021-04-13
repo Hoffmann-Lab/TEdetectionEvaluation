@@ -4,11 +4,14 @@ library(ggpubr)
 library(ggpmisc) # package to count measurements in quadrants
 source('libs/func.R')
 source('general.R')
+
 # global Variables --------------------------------------------------------
 
 TEs <- c('DNA', 'LINE', 'LTR', 'SINE')
 
 Tools <- c('SalmonTE', 'Telescope', 'TEtranscripts', 'SQuIRE', 'TEtools')
+
+project <- project.name
 
 # script relevant functions -----------------------------------------------
 
@@ -25,7 +28,7 @@ reOrderSettingRev <- function(df){
 
 reOrderTools <- function(df){
   
-  Tools <- c('salmonTE', 'Telescope', 'TEtranscripts', 'SQuIRE', 'TEtools')
+  Tools <- c('SalmonTE', 'Telescope', 'TEtranscripts', 'SQuIRE', 'TEtools')
   df <- df %>% mutate(Tool = factor(Tool, levels = Tools))
   return(df)
   
@@ -66,6 +69,8 @@ df.paired <- loadRdata(paste0(project, '/Data/paired.combined.cnttbl.processed.R
 
 df.all <- rbind(df.single, df.paired)
 
+df.all <- df.all %>% mutate(Tool = case_when(as.character(Tool) == 'salmonTE' ~ 'SalmonTE',
+                                             TRUE ~ Tool))
 
 # F-Scores ----------------------------------------------------------------
 #
@@ -754,7 +759,7 @@ df.fp <- df.all %>%
          meanCondition2 = mean(c(sample_diff_1,sample_diff_2,sample_diff_3,sample_diff_4,sample_diff_5)+1)) %>% 
   mutate(log2Fold = log(meanCondition2/meanCondition1))
 
-df.fp$Tool <- factor(df.fp$Tool, levels=c('salmonTE', 'Telescope', 'TEtranscripts', 'SQuIRE', 'TEtools')) 
+df.fp$Tool <- factor(df.fp$Tool, levels=c('SalmonTE', 'Telescope', 'TEtranscripts', 'SQuIRE', 'TEtools')) 
 df.fp$Setting <- as.factor(df.fp$Setting)
 
 df.fp$Setting <- factor(df.fp$Setting, levels=c('single', 'paired'))

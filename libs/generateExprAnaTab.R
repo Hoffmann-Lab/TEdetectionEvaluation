@@ -102,8 +102,8 @@ generateExpAnaTab <- function(count.table){
           '[40,45)',
           '> 45'
         )
-      ),
-      FC = recovered.counts / simulated.counts
+      )#,
+      #FC = recovered.counts / simulated.counts
     ) %>%
     filter(sim.expressed | recovered.expressed)
   

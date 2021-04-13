@@ -1,7 +1,7 @@
 
 #=============================== Settings =====================================
 
-project.name = 'polyester_notho'
+project.name = 'polyester_notho_100bp'
 read.threshold = 5
 file.extension = ".cnttbl.processed.Rdata"
 squire.translation = TRUE
