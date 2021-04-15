@@ -1,10 +1,11 @@
 
 #=============================== Settings =====================================
 
-project.name = 'polyester_notho_100bp'
+project.name = 'polyester_notho_100bp_uG'
 read.threshold = 5
 file.extension = ".cnttbl.processed.Rdata"
 squire.translation = TRUE
+organism = 'notho'
 
 # Sample Assignment for DESeq2
 

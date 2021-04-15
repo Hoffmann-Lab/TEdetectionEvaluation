@@ -180,11 +180,17 @@ determine.ground.truth <- function(simulation.deseq.results, set = NULL){
     dplyr::filter(padj < 0.05) %>% 
     pull(TE)
   
-  simulated.detes <- loadRdata(paste0(result.dirs[['data']], set, ".simCounts.full.Rdata")) %>% 
-    dplyr::filter(diff == 'TRUE') %>% 
-    pull(instance)
+  if(length(detected.detes) > 5000){
     
-  return(intersect(simulated.detes, detected.detes))
+    return(detected.detes)
+    
+  }else{
+    simulated.detes <- loadRdata(paste0(result.dirs[['data']], set, ".simCounts.full.Rdata")) %>% 
+      dplyr::filter(diff == 'TRUE') %>% 
+      pull(instance)
+    
+    return(intersect(simulated.detes, detected.detes))
+  }  
 }
 
 
