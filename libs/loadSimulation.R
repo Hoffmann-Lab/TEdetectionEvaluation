@@ -4,38 +4,15 @@
 
 loadSimCounts <- function(simFile){
   
-  ######
-  # This function loads the information table from the simulation. Since the
-  # names of the instances are prolonged by bedtools the id's do not fit to
-  # the origin. This function removes the extended tail, which is separated 
-  # by colons. Since the align file can contain instances multiple times
-  # it is possible that instances were simulated multiple times. To avoid
-  # trouble I remove these double entries.
-  #
-  # Mon Oct  5 10:56:43 2020 ------------------------------
-  #
-  # Removed the step to filter out instances with less than 5 read counts across
-  # all samples. It is handled now late in my benchmarking process, so that I
-  # can be sure that each table is handled equally and can change it at
-  # only one position in my code.
-  #
-  # Thu Oct 29 15:18:32 2020 ------------------------------
-  #
-  # Removed the part where 1 read were substracted from each read count. I fixed
-  # that issue in my readiator. Now, the counts of the read tables are exactly
-  # the number of reads that are contained in the fastq files.
-  #
-  #
-  #####
-  
-  simulated_read_counts <- read.table(simFile, header = TRUE)
+  simulated_read_counts <- read.table(simFile, header = TRUE, sep = ',')
   x <-  nrow(simulated_read_counts)
   
   print(paste(as.character(x), "instances were initially simulated"))
   
   simulated_read_counts <- simulated_read_counts %>% 
-    rownames_to_column(var = 'instance') %>% 
-    tidyr::separate(instance, c('instance'), sep = ":")
+    dplyr::rename(instance = X)
+    #rownames_to_column(var = 'instance') %>% 
+    #tidyr::separate(instance, c('instance'), sep = ":")
   
   simulated_read_counts <- removeDoubles(simulated_read_counts)
   

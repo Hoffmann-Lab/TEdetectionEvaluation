@@ -4,11 +4,14 @@ library(ggpubr)
 library(ggpmisc) # package to count measurements in quadrants
 source('libs/func.R')
 source('general.R')
+
 # global Variables --------------------------------------------------------
 
 TEs <- c('DNA', 'LINE', 'LTR', 'SINE')
 
 Tools <- c('SalmonTE', 'Telescope', 'TEtranscripts', 'SQuIRE', 'TEtools')
+
+project <- project.name
 
 # script relevant functions -----------------------------------------------
 
@@ -25,7 +28,7 @@ reOrderSettingRev <- function(df){
 
 reOrderTools <- function(df){
   
-  Tools <- c('salmonTE', 'Telescope', 'TEtranscripts', 'SQuIRE', 'TEtools')
+  Tools <- c('SalmonTE', 'Telescope', 'TEtranscripts', 'SQuIRE', 'TEtools')
   df <- df %>% mutate(Tool = factor(Tool, levels = Tools))
   return(df)
   
@@ -66,6 +69,8 @@ df.paired <- loadRdata(paste0(project, '/Data/paired.combined.cnttbl.processed.R
 
 df.all <- rbind(df.single, df.paired)
 
+df.all <- df.all %>% mutate(Tool = case_when(as.character(Tool) == 'salmonTE' ~ 'SalmonTE',
+                                             TRUE ~ Tool))
 
 # F-Scores ----------------------------------------------------------------
 #
@@ -503,7 +508,7 @@ sup.fig.3  <-
 save(sup.fig.3, file = paste0(project, '/Figures/raw/figure_S3.raw.Rdata'))
 
 png(paste0(project, "/Figures/figure_S3.png"), width = 12.5, height = 15.5, units = 'in', res = 600)
-print(sup.fig.4) # Make plot
+print(sup.fig.3) # Make plot
 dev.off()
 
 write.csv(total.deviation.set1, file = paste0(project, '/Figures/tmp/figure_S3.csv'))
@@ -641,6 +646,16 @@ write.csv(deseq.results, file = paste0(project, '/Figures/tmp/figure_3a.csv'))
 
 ### for TEs with a kimura smaller than 5 ------------------------------------
 
+n.young <- as.data.frame(ground.truth) %>% 
+  splitTEID('ground.truth') %>% 
+  mutate(Kimura = as.numeric(Kimura)) %>% 
+  filter(Kimura < 5) %>% nrow()
+
+n.old <- as.data.frame(ground.truth) %>% 
+  splitTEID('ground.truth') %>% 
+  mutate(Kimura = as.numeric(Kimura)) %>% 
+  filter(Kimura >= 5) %>% nrow()
+
 ground.truth.by.age <- data.frame(ground.truth) %>% 
   splitTEID('ground.truth') %>% 
   dplyr::mutate(Kimura = as.numeric(Kimura),
@@ -674,8 +689,8 @@ deseq.results.young <- deseq.results.blank %>% splitTEID('TE') %>%
     falsepositive = total - truepositive,
     fdr = falsepositive / total,
     precision = truepositive / total,
-    recall = case_when(Kim.grp == '[0,5)' ~ (truepositive / 434),
-                       Kim.grp == '> 5' ~ (truepositive / 4028),
+    recall = case_when(Kim.grp == '[0,5)' ~ (truepositive / n.young),
+                       Kim.grp == '> 5' ~ (truepositive / n.old),
                        TRUE ~ NA_real_ )
   )
 
@@ -734,7 +749,7 @@ write.csv(deseq.results.young, file = paste0(project, '/Figures/tmp/figure_3b.cs
 ## Therefore I filtered the data frame only for FP and take only that TEs
 ## with a median bigger than 0. The median ensures to take only instances that
 ## are detected in at least the half of the replicates. For the log2FC I 
-## devide the mean expression of condition 1 by the mean expression of 
+## divide the mean expression of condition 1 by the mean expression of 
 ## condition 2. I added 1 to the mean before, to avoid the case of division by
 ## zero. The diagonal arrangement of dots are TEs that where only in one 
 ## condition detected. 
@@ -754,7 +769,7 @@ df.fp <- df.all %>%
          meanCondition2 = mean(c(sample_diff_1,sample_diff_2,sample_diff_3,sample_diff_4,sample_diff_5)+1)) %>% 
   mutate(log2Fold = log(meanCondition2/meanCondition1))
 
-df.fp$Tool <- factor(df.fp$Tool, levels=c('salmonTE', 'Telescope', 'TEtranscripts', 'SQuIRE', 'TEtools')) 
+df.fp$Tool <- factor(df.fp$Tool, levels=c('SalmonTE', 'Telescope', 'TEtranscripts', 'SQuIRE', 'TEtools')) 
 df.fp$Setting <- as.factor(df.fp$Setting)
 
 df.fp$Setting <- factor(df.fp$Setting, levels=c('single', 'paired'))

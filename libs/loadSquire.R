@@ -62,6 +62,14 @@ squireHandler <- function(tool.information){
   squire.cnttbl <-
     squire.cnttbl %>% filter(!(is.na(TE) | duplicated(TE)))
   
+  # SQuIRE run into zerodevision error for two samples of Nfu so that
+  # the mean values of the other results of the respective setups
+  # are used as the respective sample.
+  if(organism == 'Nfu' && tool.information$setting == 'single'){
+    squire.cnttbl$sample_3 <- rowMeans(subset(squire.cnttbl, select = c(sample_1, sample_2, sample_4, sample_5)))
+    squire.cnttbl$sample_diff_5 <- rowMeans(subset(squire.cnttbl, select = c(sample_diff_1, sample_diff_2, sample_diff_3, sample_diff_4)))
+  }
+  
   return(squire.cnttbl)
   
 }

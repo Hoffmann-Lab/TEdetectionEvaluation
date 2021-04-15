@@ -1,24 +1,6 @@
-#source("methods.R")
-#library(tidyverse)
-#library(DESeq2)
-#library(parallel)
-#library(rrp)
 
 
 #================================= To-Do ======================================
-#
-# - column data for DEseq has to be read from a setting file
-# - I need a nice data structure to store my data information.
-# - Store the ground truth or add them to the data frame, because it is needed
-#   in the figure r markdown. Or prepare the respective data frame here in that
-#   script.
-#
-# Mon Oct  5 15:28:58 2020 ------------------------------
-# 
-# Why was the simulation still in the final data frame? 
-# Is there a reason for that?
-# I added now a filter to remove these instances, think about it anyway.
-#
 #================================ Functions ==================================
 
 runDESeq <- function(count.table, 
@@ -198,11 +180,17 @@ determine.ground.truth <- function(simulation.deseq.results, set = NULL){
     dplyr::filter(padj < 0.05) %>% 
     pull(TE)
   
-  simulated.detes <- loadRdata(paste0(result.dirs[['data']], set, ".simCounts.full.Rdata")) %>% 
-    dplyr::filter(diff == 'True') %>% 
-    pull(instance)
+  if(length(detected.detes) > 5000){
     
-  return(intersect(simulated.detes, detected.detes))
+    return(detected.detes)
+    
+  }else{
+    simulated.detes <- loadRdata(paste0(result.dirs[['data']], set, ".simCounts.full.Rdata")) %>% 
+      dplyr::filter(diff == 'TRUE') %>% 
+      pull(instance)
+    
+    return(intersect(simulated.detes, detected.detes))
+  }  
 }
 
 

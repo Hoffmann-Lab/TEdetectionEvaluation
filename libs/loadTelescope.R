@@ -18,7 +18,7 @@ loadTable <- function(sample){
     
     tab$sample = stri_sub(sample, 1, -2)
   
-  }else if(strsplit(sample, "[.]")[[1]][2] == 'fastq'){
+  }else if(identical(base::strsplit(sample, "[.]")[[1]][2], 'fastq')){
     
     tab$sample = strsplit(sample, "[.]")[[1]][1]
   

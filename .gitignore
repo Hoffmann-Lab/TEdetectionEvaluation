@@ -12,3 +12,15 @@ panel*
 generateTables.R
 supplement*
 te_benchmark
+polyester_notho/
+polyester_notho_100bp/
+sessionInfo.log
+Notho100bpdataInfo.csv
+polyester_hs_50bp polyester_notho polyester_notho_100bp
+polyester_hs_50bp polyester_notho polyester_notho_100bp
+polyester_hs_50bp
+polyester_hs_100bp/
+polyester_notho_100bp_uG/
+Notho50bpdataInfo.csv
+Human50bpdataInfo.csv
+Human100bpdataInfo.csv
