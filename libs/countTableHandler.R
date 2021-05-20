@@ -72,6 +72,17 @@ countTableHandler <- function(tool.information, sumCount.threshold){
     count.tbl <-
       count.tbl %>% filterSumCounts(threshold = sumCount.threshold)
     
+    # sometimes the sample numbers are a bit different. Use the following
+    # loop to unify the names
+    if('sample_01' %in% colnames(count.tbl)){
+      print('Substitution of Samplenames')
+      for(i in 1:9){
+        
+        colnames(count.tbl)[which(names(count.tbl) == paste0("sample_0", i))] <- paste0("sample_", i)
+      }
+      
+      
+    }
     save(count.tbl, file = paste0(
       tool.information$output,
       tool,
