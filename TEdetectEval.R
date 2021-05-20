@@ -8,38 +8,6 @@ invisible(sapply(list.files('libs','*.R', full.names = TRUE), source))
 
 conflictHandling()
 
-#================================= ToDO =======================================
-#
-# - add the possibility to avoid the translation process for SQuIRE
-# - Implement a if else condition that checks if the combined tool data already
-#   exists. Additionally, you can add a condition if you want to calculate the
-#   data again. This would avoid the afford to remove the data all time when
-#   you want to recalculate the things.
-#==============================================================================
-
-
-#=============================== Questions ====================================
-#
-# Why there are TE ids named as NA within the SQuIRE count table? Is this a 
-# result because of the translation process?
-#
-# Why I do filter for simulated.expressed and recovered.expressed? This should
-# be done by the data processing before, shouldn't be?
-#
-# Mon Oct  5 17:07:37 2020 ------------------------------
-# 
-# Currently, I remove each instance with an NA in their TE column, which affects
-# especially SQuIRE. Does this have an impact to the results? The reason for
-# the NAs is the translation process. When their is no intersection between an
-# instance of my annotation and and instances of squires annotation there will
-# be an NA generated in the TE column.
-#
-# I think this is a misunderstanding. I keep the squire annotation when the
-# ID is not intersect with an instance of my annotation, therefore I have
-# most likely to types of IDs in the squire data frame. One separated by 
-# colons (Squire anno) and the other only separated by pipe symbols.
-#
-#==============================================================================
 
 if(project.name == 'dev'){
   print('ATTENTION THE DEV MODUS IS STARTED!')
@@ -164,9 +132,9 @@ print('Done.')
  
 print('Prepare data frame for recall vs fdr plot')
 
-# Instances that were detected as differentially expressed out of the simulation
-# table were considered as truly differentially expressed for the following
-# analysis.
+# Instances that were detected as differentially expressed when the simulated 
+# counts are the input of DESeq2, are considered as truly differentially 
+# expressed for the following analysis.
 
 for(setting in 1:length(data)){
   

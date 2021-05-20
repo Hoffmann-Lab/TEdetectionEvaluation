@@ -5,6 +5,7 @@ source('general.R')
 
 # General Stuff ----
 
+project <- project.name
 ## Simulation ----
 ### How much Instances per order were simulated separated by their Kimura group
 ### assignment. When I load the processed simulation data than instance that
@@ -218,6 +219,28 @@ df %>%
 # range between 1.6 and 5
 df %>% 
   filter(mean.recov.log >= log(5), between(mean.sim.log, 1.6, 5)) %>% 
+  mutate(diff = (mean.recov/mean.sim)*100,
+         estimation = case_when(diff > 100 ~ 'overestimated',
+                                diff < 100 ~ 'underestimated',
+                                TRUE ~ 'strike')) %>% 
+  group_by(Tool, Setting) %>% 
+  count(name="count", Tool, Setting, estimation) %>% 
+  mutate(percent = (count/(sum(count))*100)) %>% View()
+
+# range between 1.6 and 7
+df %>% 
+  filter(mean.recov.log >= log(5), between(mean.sim.log, 1.6, 7)) %>% 
+  mutate(diff = (mean.recov/mean.sim)*100,
+         estimation = case_when(diff > 100 ~ 'overestimated',
+                                diff < 100 ~ 'underestimated',
+                                TRUE ~ 'strike')) %>% 
+  group_by(Tool, Setting) %>% 
+  count(name="count", Tool, Setting, estimation) %>% 
+  mutate(percent = (count/(sum(count))*100)) %>% View()
+
+# range between 2.5 and 7
+df %>% 
+  filter(mean.recov.log >= log(5), between(mean.sim.log, 2.6, 7)) %>% 
   mutate(diff = (mean.recov/mean.sim)*100,
          estimation = case_when(diff > 100 ~ 'overestimated',
                                 diff < 100 ~ 'underestimated',
