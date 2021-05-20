@@ -1,6 +1,7 @@
 library(ggplot2)
 library(tidyverse)
 library(ggpubr)
+library(grid)
 library(ggpmisc) # package to count measurements in quadrants
 source('libs/func.R')
 source('general.R')
@@ -50,11 +51,52 @@ my_theme <- function(){
         legend.key         = element_rect(fill = "white"))
 }
 
+color_strips <- function(pl){
+  
+  cols <- c('#cbcbcb', '#909090', "#E07A5F", "#af7ac5", "#F2CC8F", "#3D405B", '#81B29A')
+  
+  g <- ggplot_gtable(ggplot_build(pl))
+  
+  strip_both <- which(grepl('strip-', g$layout$name))
+  
+  k <- 1
+  
+  for(i in strip_both){
+    j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
+    g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- cols[k]
+    k <- k+1
+  }
+  
+  #pl <- grid.draw(g)
+  return(g)
+}
 
-my_colors <- c("#E07A5F", "#3D405B", "#81B29A", "#F2CC8F", '#af7ac5', '#E09F3E', '#335C67')
+shade_strips <- function(pl){
+  cols <- c('#cbcbcb', '#909090')
+  
+  
+  g <- ggplot_gtable(ggplot_build(pl))
+  
+  strip_both <- which(grepl('strip-', g$layout$name))
+  
+  k <- 1
+  
+  for(i in strip_both){
+    j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
+    g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- cols[k]
+    k <- k+1
+  }
+  
+  #pl <- grid.draw(g)
+  return(g)
+}
+
+
+
+my_colors <- c("#E07A5F", "#3D405B", "#81B29A", "#F2CC8F", '#af7ac5', '#cbcbcb', '#909090')
 names(my_colors) <- c('salmonTE', 'SQuIRE', 'TEtools', 'TEtranscripts', 'Telescope', 'single', 'paired')
 
-
+text.color <- c("#81B29A", "#3D405B",  "#F2CC8F", '#af7ac5',"#E07A5F")
 # load general data -------------------------------------------------------
 # The following data frames contain the raw counts of the tools. The count table
 # are processed, which means that detected TEs with less than 5 reads in sum
@@ -105,8 +147,7 @@ metrics.sum$Tool <- ordered(metrics.sum$Tool, levels = rev(Tools))
 panel1.a <- ggplot(metrics.sum, aes(x = Tool, mean, fill=Setting)) +
   geom_col(width=0.8, 
            position = 'dodge',
-           aes(group=Setting), 
-           color = 'black') +
+           aes(group=Setting)) +
   geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd),
                 position = position_dodge(0.8),
                 size = .6,
@@ -120,7 +161,8 @@ panel1.a <- ggplot(metrics.sum, aes(x = Tool, mean, fill=Setting)) +
        title = 'all') +
   theme(legend.position = "none",
         axis.title = element_blank(),
-        plot.title = element_text(size = 11, family = 'CM Sans', hjust = 1,  vjust = -1.5))
+        plot.title = element_text(size = 11, family = 'CM Sans', hjust = 1,  vjust = -1.5),
+        axis.text.y = element_text(colour = text.color))
 
 save(panel1.a, file = paste0(project, '/Figures/raw/figure_1a.raw.Rdata'))
 
@@ -173,8 +215,10 @@ pl.supplement.3 <- ggplot(metrics.kimura, aes(Kim.grp, F_score, color=Setting)) 
         strip.text = element_text(family = "CM Sans", size = 18),
         axis.text.x = element_text(angle = 45, hjust = 1)        )
 
+pl.supplement.3 <- color_strips(pl.supplement.3)
+
 png(paste0(project, "/Figures/figure_S2.png"), width = 12.5, height = 10, units = 'in', res = 600)
-print(pl.supplement.3) # Make plot
+grid.draw(pl.supplement.3) # Make plot
 dev.off()
 
 ggsave(filename = paste0(project, "/Figures/figure_S2.pdf"), 
@@ -221,7 +265,8 @@ panel1.c <- ggplot(metrics.order.sum, aes(x = Tool, mean, fill=Setting)) +
   geom_col(width=0.8, 
            position = 'dodge', 
            aes(group=Setting), 
-           color = 'black') +
+           #color = 'black',
+           alpha=0.5) +
   facet_grid(.~order) +
   geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd),
                 position = position_dodge(0.8),
@@ -239,7 +284,8 @@ panel1.c <- ggplot(metrics.order.sum, aes(x = Tool, mean, fill=Setting)) +
         axis.title = element_blank(),
         axis.text = element_text(size = 10),
         plot.title = element_text(size = 11, family = 'CM Sans', hjust = 1,  vjust = -1.5),
-        panel.spacing.x = unit(0.4, "lines"))
+        panel.spacing.x = unit(0.4, "lines"),
+        axis.text.y = element_text(colour = text.color))
 
 save(panel1.c, file = paste0(project, '/Figures/raw/figure_1c.raw.Rdata'))
 
@@ -283,7 +329,8 @@ panel1.b <- ggplot(metrics.young.sum, aes(x = Tool, mean, fill=Setting)) +
   geom_col(width=0.8, 
            position = 'dodge', 
            aes(group=Setting), 
-           color = 'black') +
+           #color = 'black',
+           alpha = 0.5) +
   geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd),
                 position = position_dodge(0.8),
                 size = .6,
@@ -293,7 +340,7 @@ panel1.b <- ggplot(metrics.young.sum, aes(x = Tool, mean, fill=Setting)) +
   my_theme() +
   coord_flip() +
   scale_fill_manual(name = 'Setup',
-                    values = c('#335C67','#E09F3E'),
+                    values = c('#909090', '#cbcbcb'),
                     guide = guide_legend(reverse = TRUE))+
   labs(y = 'mean(F-score)',
        title = 'Kimura distance < 5') +
@@ -306,7 +353,8 @@ panel1.b <- ggplot(metrics.young.sum, aes(x = Tool, mean, fill=Setting)) +
         legend.direction = 'horizontal',
         legend.background = element_rect(fill = "transparent"), # get rid of legend bg
         legend.box.background = element_blank(),
-        legend.key.size = unit(0.6,"line")) 
+        legend.key.size = unit(0.6,"line"),
+        axis.text.y = element_text(colour = text.color)) 
 
 
 save(panel1.b, file = paste0(project, '/Figures/raw/figure_1b.raw.Rdata'))
@@ -354,7 +402,8 @@ panel1.d <- ggplot(metrics.young.order.sum, aes(x = Tool, mean, fill=Setting)) +
   geom_col(width=0.8, 
            position = 'dodge', 
            aes(group=Setting), 
-           color = 'black') +
+           #color = 'black'
+           alpha = 0.5) +
   facet_grid(.~order) +
   geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd),
                 position = position_dodge(0.8),
@@ -373,7 +422,8 @@ panel1.d <- ggplot(metrics.young.order.sum, aes(x = Tool, mean, fill=Setting)) +
         axis.text = element_text(size = 10),
         axis.title.x = element_blank(),
         plot.title = element_text(size = 11, family = 'CM Sans', hjust = 1, vjust = -1.5),
-        panel.spacing.x = unit(0.4, "lines"))
+        panel.spacing.x = unit(0.4, "lines"),
+        axis.text.y = element_text(colour = text.color))
 
 
 # Store all relevant data
@@ -600,36 +650,37 @@ deseq.results <- deseq.results.blank %>%
     total = 1:n(),
     truepositive = base::cumsum(diff),
     falsepositive = total - truepositive,
-    fdr = falsepositive / total,
+    FDR = falsepositive / total,
     precision = truepositive / total,
-    recall = truepositive / length(ground.truth))
+    TPR = truepositive / length(ground.truth))
 
 deseq.results$setting <- ordered(deseq.results$setting, levels=c('single', 'paired'))
 
 
 
 recall.fdr.all <- 
-  ggplot(deseq.results, aes(x = recall, y = fdr, color = Tool)) +
+  ggplot(deseq.results, aes(x = TPR, y = FDR, color = Tool)) +
   geom_line(size = 1) +
   geom_hline(yintercept = 0.1,
              linetype = "dashed",
              color = "black") +
   scale_color_manual(name = 'Tool', values = my_colors) +
   coord_cartesian(ylim=c(0,1), expand = FALSE ) +
-  scale_y_continuous(position = "right") +
+  scale_x_continuous(breaks = c(0, 0.5, 1), labels = c(0,0.5,1)) +
+  scale_y_continuous(breaks = c(0, 0.5, 1), labels = c(0,0.5,1)) +
   facet_grid(.~setting) +
   theme_bw() +
   theme(legend.justification=c(0,1), 
         legend.position=c(0.02,0.98),
         panel.grid.minor = element_line(colour = 'grey', linetype = 'dotted'),
-        panel.grid.major = element_blank(),
+        panel.grid.major = element_line(colour = 'grey', linetype = 'dotted'),
         panel.spacing.x = unit(1, "lines"),
         panel.background = element_blank(),
         strip.background=element_rect(colour="grey", fill="white"),
-        strip.text = element_text(family = "CM Sans", size = 12),
-        axis.text = element_text(family = "CM Sans", size = 10),
-        axis.title = element_text(family = "CM Sans", size = 12),
-        title = element_text(family = "CM Sans", size = 12),
+        strip.text = element_text(family = "CM Sans", size = 16, face = 'bold'),
+        axis.text = element_text(family = "CM Sans", size = 14),
+        axis.title = element_text(family = "CM Sans", size = 16, face = 'bold'),
+        #title = element_text(family = "CM Sans", size = 12),
         legend.key.size = unit(0.4,"line"),
         legend.title = element_text(size = 9, family = "CM Sans", face = 'bold'), 
         legend.text = element_text(size = 7, family = "CM Sans"))
@@ -638,8 +689,11 @@ recall.fdr.all <-
 
 save(recall.fdr.all, file = paste0(project, '/Figures/raw/figure_3a.raw.Rdata'))
 
+
+recall.fdr.all <- shade_strips(recall.fdr.all)
+
 png(paste0(project, "/Figures/figure_3a.png"), width = 8, height = 5, units = 'in', res = 600)
-print(recall.fdr.all) # Make plot
+grid.draw(recall.fdr.all) # Make plot
 dev.off()
 
 write.csv(deseq.results, file = paste0(project, '/Figures/tmp/figure_3a.csv'))
@@ -687,9 +741,9 @@ deseq.results.young <- deseq.results.blank %>% splitTEID('TE') %>%
     total = 1:n(),
     truepositive = base::cumsum(diff),
     falsepositive = total - truepositive,
-    fdr = falsepositive / total,
+    FDR = falsepositive / total,
     precision = truepositive / total,
-    recall = case_when(Kim.grp == '[0,5)' ~ (truepositive / n.young),
+    TPR = case_when(Kim.grp == '[0,5)' ~ (truepositive / n.young),
                        Kim.grp == '> 5' ~ (truepositive / n.old),
                        TRUE ~ NA_real_ )
   )
@@ -698,11 +752,11 @@ deseq.results.young <- deseq.results.blank %>% splitTEID('TE') %>%
 deseq.results.young$setting <- ordered(deseq.results.young$setting, levels=c('single', 'paired'))
 
 recall.fdr.age <- 
-  ggplot(deseq.results.young %>% filter(Kim.grp == '[0,5)'), aes(x = recall, y = fdr, color = Tool)) +
+  ggplot(deseq.results.young %>% filter(Kim.grp == '[0,5)'), aes(x = TPR, y = FDR, color = Tool)) +
   geom_line(size = 1) +
   geom_hline(yintercept = 0.1,
              linetype = "dashed",
-             color = "grey80") +
+             color = "black") +
   scale_color_manual(name = 'Tool', values = my_colors) +
   coord_cartesian(ylim=c(0,1), expand = FALSE ) +
   facet_grid(.~setting) +
@@ -722,9 +776,9 @@ recall.fdr.age <-
 ######
 # Extract some numbers
 
-deseq.results.young %>% filter(Kim.grp == '[0,5)', between(fdr, 0.11, 0.09), setting == 'paired') %>% View()
-
-deseq.results.young %>% filter(Kim.grp == '[0,5)', Tool == 'TEtranscripts', setting == 'paired') %>% View()
+# deseq.results.young %>% filter(Kim.grp == '[0,5)', between(fdr, 0.11, 0.09), setting == 'paired') %>% View()
+# 
+# deseq.results.young %>% filter(Kim.grp == '[0,5)', Tool == 'TEtranscripts', setting == 'paired') %>% View()
 
 ######
 # Extract some numbers
@@ -736,8 +790,10 @@ deseq.results.young %>% filter(Kim.grp == '[0,5)', Tool == 'TEtranscripts', sett
 ### Store raw plot
 save(recall.fdr.age, file = paste0(project, '/Figures/raw/figure_3b.Rdata'))
 
+recall.fdr.age <- shade_strips(recall.fdr.age)
+
 png(paste0(project, "/Figures/figure_3b.png"), width = 8, height = 5, units = 'in', res = 600)
-print(recall.fdr.age) # Make plot
+grid.draw(recall.fdr.age) # Make plot
 dev.off()
 
 write.csv(deseq.results.young, file = paste0(project, '/Figures/tmp/figure_3b.csv'))
@@ -800,8 +856,10 @@ log2FoldFP <- df.fp %>% filter(abs(log2Fold)>0.5) %>%
 ### Store raw plot
 save(log2FoldFP, file = paste0(project, '/Figures/raw/figure_3c.Rdata'))
 
+log2FoldFP <- color_strips(log2FoldFP)
+
 png(paste0(project, "/Figures/figure_3c.png"), width = 12.5, height = 10, units = 'in', res = 600)
-print(log2FoldFP) # Make plot
+grid.draw(log2FoldFP) # Make plot
 dev.off()
 
 write.csv(df.fp %>% filter(abs(log2Fold)>0.5), 
