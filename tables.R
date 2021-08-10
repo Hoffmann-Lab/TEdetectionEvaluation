@@ -45,7 +45,9 @@ df.order.kim.count <- df.order.kim.count %>%
         '[40,45)',
         '> 45')))
 
-df.order.kim.count <- df.order.kim.count %>% count(order, Kim.grp) %>%  spread(Kim.grp, n) %>%  
+df.order.kim.count <- df.order.kim.count %>% 
+  filter(order %in% c('DNA', 'LINE', 'LTR', 'SINE')) %>% 
+  count(order, Kim.grp) %>%  spread(Kim.grp, n) %>%  
   mutate(sum = rowSums(.[-1], na.rm = TRUE)) %>%
   adorn_totals("row")
 

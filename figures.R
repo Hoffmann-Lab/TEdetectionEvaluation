@@ -26,7 +26,7 @@ showtext_auto()
 
 TEs <- c('DNA', 'LINE', 'LTR', 'SINE')
 
-Tools <- c('SalmonTE', 'Telescope', 'TEtranscripts', 'SQuIRE', 'TEtools')
+Tools <- c('SalmonTE*', 'Telescope', 'TEtranscripts*', 'SQuIRE', 'TEtools*')
 
 project <- project.name
 
@@ -34,7 +34,7 @@ project <- project.name
 
 #my_colors <- c("#E07A5F", "#3D405B", "#81B29A", "#F2CC8F", '#af7ac5', '#cbcbcb', '#909090')
 my_colors <- c("#d95b35ff", "#0d0d49ff", "#64a183ff", "#e69c23ff", '#9f5cbaff', '#cbcbcb', '#909090')
-names(my_colors) <- c('SalmonTE', 'SQuIRE', 'TEtools', 'TEtranscripts', 'Telescope', 'Single-end setup', 'Paired-end setup')
+names(my_colors) <- c('SalmonTE*', 'SQuIRE', 'TEtools*', 'TEtranscripts*', 'Telescope', 'Single-end setup', 'Paired-end setup')
 
 text.color <- c("#64a183ff", "#0d0d49ff",  "#e69c23ff", '#9f5cbaff', "#d95b35ff")#"#E07A5F")
 
@@ -53,7 +53,7 @@ reOrderSettingRev <- function(df){
 
 reOrderTools <- function(df){
   
-  Tools <- c('SalmonTE', 'Telescope', 'TEtranscripts', 'SQuIRE', 'TEtools')
+  Tools <- c('SalmonTE*', 'Telescope', 'TEtranscripts*', 'SQuIRE', 'TEtools*')
   df <- df %>% mutate(Tool = factor(Tool, levels = Tools))
   return(df)
   
@@ -222,7 +222,9 @@ df.paired <- loadRdata(paste0(project, '/Data/paired.combined.cnttbl.processed.R
 df.all <- rbind(df.single, df.paired)
 
 df.all <- df.all %>% 
-  mutate(Tool = case_when(as.character(Tool) == 'salmonTE' ~ 'SalmonTE',
+  mutate(Tool = case_when(as.character(Tool) == 'salmonTE' ~ 'SalmonTE*',
+                          as.character(Tool) == 'TEtranscripts' ~ 'TEtranscripts*',
+                          as.character(Tool) == 'TEtools' ~ 'TEtools*',
                                              TRUE ~ Tool),
          Setting = case_when(as.character(Setting) == 'single' ~ 'Single-end setup',
                              as.character(Setting) == 'paired' ~ 'Paired-end setup'))
@@ -247,9 +249,10 @@ metrics <- df.all %>%
          Precision = TP/(TP+FP),
          F_score = 2*(Precision*Sensitivity)/(Precision+Sensitivity),
          FDR = FP/(TP+FP),
-         Setting = as.factor(Setting),
-         Tool = case_when(as.character(Tool) == 'salmonTE' ~ 'SalmonTE',
-                          TRUE ~ Tool))
+         Setting = as.factor(Setting))
+
+         # Tool = case_when(as.character(Tool) == 'salmonTE' ~ 'SalmonTE',
+         #                  TRUE ~ Tool))
 
 metrics.sum <- metrics %>% 
   group_by(Tool, Setting) %>%
@@ -471,6 +474,8 @@ dev.off()
 
 write.csv(metrics.young.order.sum, file = paste0(project, '/Figures/tmp/figure_1d.csv'))
 
+## width =3.6 when not all TE orders are present
+## width = 4.5 when all TE orders are present
 ggsave(filename = paste0(project, "/Figures/figure_1d.pdf"), 
        print(panel1.d),
        width = 4.5, height = 2, dpi = 600, units = "in", device=cairo_pdf)
@@ -526,13 +531,14 @@ save(total.deviation, file = paste0(project, '/Data/total.deviation.set2.raw.Rda
 # R^2 Calculation for true positives
 # Do not need to filter for 'with DETEs' because it is already happened for the
 # total.deviation data frame. I calculate th R squared value and add the result
-# to the respective plot.
+# to the respective plot. The mutate at the last position within the pipe
+# defines the position of the lable within the plot.
 
 tool_cor <- total.deviation %>% 
   filter(mean.recov.log >= log(5), mean.sim.log >= log(5)) %>% 
   group_by(Tool, Setting) %>% 
   summarise(r.squared = summary(lm(mean.sim.log~mean.recov.log))$r.squared) %>% 
-  mutate(mean.sim.log = 9.5, 
+  mutate(mean.sim.log = 9.5,
          mean.recov.log = 2,
          label = glue("*r*<sup>2</sup>(TP) = {round(r.squared, 2)}"))
 
@@ -791,7 +797,7 @@ df.fp <- df.all %>%
          meanCondition2 = mean(c(sample_diff_1,sample_diff_2,sample_diff_3,sample_diff_4,sample_diff_5)+1)) %>% 
   mutate(log2Fold = log(meanCondition2/meanCondition1))
 
-df.fp$Tool <- factor(df.fp$Tool, levels=c('SalmonTE', 'Telescope', 'TEtranscripts', 'SQuIRE', 'TEtools')) 
+df.fp$Tool <- factor(df.fp$Tool, levels=c('SalmonTE*', 'Telescope', 'TEtranscripts*', 'SQuIRE', 'TEtools*')) 
 df.fp$Setting <- as.factor(df.fp$Setting)
 
 df.fp$Setting <- factor(df.fp$Setting, levels=c('Single-end setup', 'Paired-end setup'))
