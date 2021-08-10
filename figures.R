@@ -98,7 +98,6 @@ shade_strips <- function(pl){
   
   cols <- c('#cbcbcb', '#909090')
   
-  
   g <- ggplot_gtable(ggplot_build(pl))
   
   strip_both <- which(grepl('strip-', g$layout$name))
@@ -173,6 +172,7 @@ dete_supplement_theme <- function(pl){
           legend.text = element_text(size = 7 ))
   
   return(pl)
+
 }
 
 dete_main_theme <- function(pl){
@@ -206,6 +206,11 @@ dete_main_theme <- function(pl){
   return(pl)
 }
 
+
+my_colors <- c("#E07A5F", "#3D405B", "#81B29A", "#F2CC8F", '#af7ac5', '#cbcbcb', '#909090')
+names(my_colors) <- c('salmonTE', 'SQuIRE', 'TEtools', 'TEtranscripts', 'Telescope', 'single', 'paired')
+
+text.color <- c("#81B29A", "#3D405B",  "#F2CC8F", '#af7ac5',"#E07A5F")
 # load general data -------------------------------------------------------
 
 # The following data frames contain the raw counts of the tools. The count tables
@@ -269,7 +274,9 @@ panel1.a <- ggplot(metrics.sum, aes(x = Tool, mean, fill=Setting)) +
   geom_col(width=0.8, 
            position = 'dodge',
            aes(group=Setting)) +
+
   facet_grid(.~pseudoFacette) +
+
   geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd),
                 position = position_dodge(0.8),
                 size = .6,
@@ -453,7 +460,7 @@ metrics.young.order.sum %>%
 
 panel1.d <- ggplot(metrics.young.order.sum, aes(x = Tool, mean, fill=Setting)) +
   geom_col(width=0.8, 
-           position = 'dodge', 
+           position = 'dodge',
            aes(group=Setting)) +
   facet_grid(.~order) +
   geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd),
@@ -462,6 +469,7 @@ panel1.d <- ggplot(metrics.young.order.sum, aes(x = Tool, mean, fill=Setting)) +
                 color = 'black',
                 width = .2) +
   labs(title = 'Kimura distance < 5 & by TE orders')
+
 
 panel1.d <- fScore_theme(panel1.d)
 
@@ -668,10 +676,10 @@ if(project != 'polyester_mm_100bp_fG'){
 
 
 
-
 ### Store raw plot
 
 save(panel3.a, file = paste0(project, '/Figures/raw/figure_3a.raw.Rdata'))
+
 
 
 panel3.a <- shade_strips(panel3.a)
@@ -736,12 +744,10 @@ deseq.results.young <- deseq.results.blank %>% splitTEID('TE') %>%
 
 deseq.results.young$Setting <- ordered(deseq.results.young$Setting, levels=c('Single-end setup', 'Paired-end setup'))
 
-
 panel3.b <- 
   ggplot(deseq.results.young %>% filter(Kim.grp == '[0,5)'), aes(x = TPR, y = FDR, color = Tool)) +
   geom_line(size = 0.5) +
   facet_grid(.~Setting)
-
 
 if(project != 'polyester_mm_100bp_fG'){
   
@@ -754,11 +760,13 @@ if(project != 'polyester_mm_100bp_fG'){
 }
 
 
+
 ### Store raw plot
 
 save(panel3.b, file = paste0(project, '/Figures/raw/figure_3b.Rdata'))
 
 panel3.b <- shade_strips(panel3.b)
+
 
 png(paste0(project, "/Figures/figure_3b.png"), 
     width = 4.1, height = 2.4, units = 'in', res = 150)
@@ -831,6 +839,7 @@ panel3.c <- df.fp %>% filter(abs(log2Fold)>0.5) %>%
 
 
 ### Store raw plot
+
 
 save(panel3.c, file = paste0(project, '/Figures/raw/figure_3c.Rdata'))
 
