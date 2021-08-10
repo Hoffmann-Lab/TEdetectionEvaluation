@@ -1,0 +1,3 @@
+[submodule "readiator"]
+	path = readiator
+	url = https://github.com/Hoffmann-Lab/readiator.git
