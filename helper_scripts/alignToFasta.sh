@@ -6,7 +6,7 @@ echo given align file: $alignFile
 echo given reference genome: $referenceGenome
 
 # translate align file to bed and gtf
-align_parser.py -a $alignFile
+python3 align_parser.py -a $alignFile
 
 
 # Build file prefix
